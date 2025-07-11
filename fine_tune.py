@@ -9,7 +9,7 @@ DEVICE = get_torch_device()
 #It takes in trial object, dataset path, and model path as parameters
 #It returns the validation accuracy of the model trained with the hyperparameters suggested by the trial object
 
-DEFAULT_DATA_ARGS = {
+DEFAULT_DATA_AUG_ARGS = {
     'degrees': 10.0,
     'scale': 0.5,
     'fliplr': 0.5,
@@ -21,7 +21,7 @@ DEFAULT_DATA_ARGS = {
     'mosaic': 0.4
 }
 
-def objective(trial, dataset_path='baseball_data.yaml', model_path='glove_tracking_v4_YOLOv11.pt', data_args=DEFAULT_DATA_ARGS,
+def objective(trial, dataset_path='baseball_data.yaml', model_path='glove_tracking_v4_YOLOv11.pt', data_args=DEFAULT_DATA_AUG_ARGS,
               epochs=5):
     
     # Define the hyperparameter search space
@@ -78,7 +78,7 @@ def optimize(n_trials):
     return best_params
 
 def fine_tune_model(model_path='glove_tracking_v4_YOLOv11.pt', dataset_path='baseball_data.yaml', fine_tune_epochs=25, 
-                    data_args = DEFAULT_DATA_ARGS, best_params=None, run_name='fine_tuned_run'):
+                    data_args = DEFAULT_DATA_AUG_ARGS, best_params=None, run_name='fine_tuned_run'):
     
     model = YOLO(model_path).to(device=DEVICE)
     print('Pretrained model loaded')
@@ -140,4 +140,4 @@ if __name__ == "__main__":
 
     # fine tune model
     fine_tune_model(model_path=model_path, dataset_path=dataset_path, fine_tune_epochs=fine_tune_epochs, 
-                    data_args=DEFAULT_DATA_ARGS, best_params=best_params, run_name='fine_tuned_run')
+                    data_args=DEFAULT_DATA_AUG_ARGS, best_params=best_params, run_name='fine_tuned_run')
