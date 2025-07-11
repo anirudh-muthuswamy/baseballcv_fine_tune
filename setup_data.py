@@ -16,6 +16,7 @@
 import yaml 
 import os
 from IPython.display import display
+import argparse
 
 def create_data_yaml(dataset_path):
     dataset_path = os.path.abspath(dataset_path)
@@ -55,7 +56,15 @@ def filter_labels(label_dir):
             file.writelines(filtered_lines)
 
 if __name__ == "__main__":
-    dataset_path = "baseball_rubber_home_glove"
+    parser = argparse.ArgumentParser(description="Setup dataset and filter labels.")
+    parser.add_argument(
+        "--dataset_path",
+        type=str,
+        default="baseball_rubber_home_glove",
+        help="Path to the dataset directory"
+    )
+    args = parser.parse_args()
+    dataset_path = args.dataset_path
 
     create_data_yaml(dataset_path)
     

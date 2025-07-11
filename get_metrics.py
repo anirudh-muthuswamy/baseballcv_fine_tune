@@ -1,6 +1,7 @@
 from ultralytics import YOLO
 import os
 from utils import get_torch_device
+import argparse
 
 DEVICE = get_torch_device()
 
@@ -27,9 +28,15 @@ def get_metrics(model_path, dataset_path, name, split='test'):
 
 if __name__ == "__main__":
 
-    model_path = 'glove_tracking_v4_YOLOv11.pt'
-    fine_tuned_model_path = 'fine_tuned_glove_tracking_YOLOv11.pt'
-    dataset_path = 'baseball_data.yaml'
+    parser = argparse.ArgumentParser(description="Evaluate YOLO model metrics.")
+    parser.add_argument('--model_path', type=str, default='glove_tracking_v4_YOLOv11.pt', help='Path to baseline model')
+    parser.add_argument('--fine_tuned_model_path', type=str, default='fine_tuned_glove_tracking_YOLOv11.pt', help='Path to fine-tuned model')
+    parser.add_argument('--dataset_path', type=str, default='baseball_data.yaml', help='Path to dataset YAML file')
+    args = parser.parse_args()
+
+    model_path = args.model_path
+    fine_tuned_model_path = args.fine_tuned_model_path
+    dataset_path = args.dataset_path
 
     # Get baseline metrics for the model
     baseline_metrics = get_metrics(model_path=model_path, dataset_path=dataset_path, name='baseline_val')

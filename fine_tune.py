@@ -2,7 +2,7 @@ import optuna
 import yaml
 from ultralytics import YOLO
 from utils import get_torch_device
-
+import argparse
 DEVICE = get_torch_device()
 
 #Defining objective function for optuma for hyperparameter optimization 
@@ -115,11 +115,20 @@ def fine_tune_model(model_path='glove_tracking_v4_YOLOv11.pt', dataset_path='bas
 
 
 if __name__ == "__main__":
-    n_trials = 10
-    optimize_hyperpaterameters = False  # Set to True to optimize hyperparameters
-    model_path = 'glove_tracking_v4_YOLOv11.pt'  # Path to the pretrained model
-    dataset_path = 'baseball_data.yaml'  # Path to the dataset YAML file
-    fine_tune_epochs = 25
+    parser = argparse.ArgumentParser(description='Fine-tune YOLO model with optional hyperparameter optimization.')
+    parser.add_argument('--n_trials', type=int, default=10, help='Number of Optuna trials for hyperparameter optimization')
+    parser.add_argument('--optimize_hyperpaterameters', action='store_true', help='Set this flag to optimize hyperparameters')
+    parser.add_argument('--model_path', type=str, default='glove_tracking_v4_YOLOv11.pt', help='Path to the pretrained model')
+    parser.add_argument('--dataset_path', type=str, default='baseball_data.yaml', help='Path to the dataset YAML file')
+    parser.add_argument('--fine_tune_epochs', type=int, default=25, help='Number of epochs for fine-tuning')
+
+    args = parser.parse_args()
+
+    n_trials = args.n_trials
+    optimize_hyperpaterameters = args.optimize_hyperpaterameters
+    model_path = args.model_path
+    dataset_path = args.dataset_path
+    fine_tune_epochs = args.fine_tune_epochs
 
     if optimize_hyperpaterameters:
         print(f'Starting hyperparameter optimization with {n_trials} trials...')
