@@ -36,6 +36,8 @@ if __name__ == "__main__":
     print("Baseline Model Performance:")
     print_metrics(baseline_metrics)
 
+    print("------------------------------")
+
     if os.path.exists(fine_tuned_model_path):
     #Compare baseline metrics with fine tuned model
         fine_tuned_metrics = get_metrics(model_path=fine_tuned_model_path, dataset_path=dataset_path, name='fine_tuned_val')
