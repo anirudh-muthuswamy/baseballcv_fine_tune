@@ -4,6 +4,6 @@ names:
 - baseball
 - rubber
 nc: 4
-test: /Users/anirudh/Desktop/projects_and_learnings/phillies_asses/baseball_rubber_home_glove/test
-train: /Users/anirudh/Desktop/projects_and_learnings/phillies_asses/baseball_rubber_home_glove/train
-val: /Users/anirudh/Desktop/projects_and_learnings/phillies_asses/baseball_rubber_home_glove/valid
+test: /Users/anirudh/Desktop/projects_and_learnings/phillies_asses/baseball_rubber_home_glove/test/images
+train: /Users/anirudh/Desktop/projects_and_learnings/phillies_asses/baseball_rubber_home_glove/train/images
+val: /Users/anirudh/Desktop/projects_and_learnings/phillies_asses/baseball_rubber_home_glove/valid/images
