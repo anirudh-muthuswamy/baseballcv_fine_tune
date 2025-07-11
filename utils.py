@@ -14,5 +14,4 @@ def get_torch_device():
     else:
         device = torch.device('cpu')
         print("Using CPU")
-
     return device
