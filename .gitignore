@@ -1,0 +1,7 @@
+__pycache__
+.DS_Store
+*.zip
+*.pt
+BaseballCV/
+runs/
+baseball_rubber_home_glove/
