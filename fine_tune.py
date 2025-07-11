@@ -26,8 +26,9 @@ def objective(trial, dataset_path='baseball_data.yaml', model_path='glove_tracki
     
     # Define the hyperparameter search space
     lr = trial.suggest_loguniform('lr', 1e-5, 1e-3)
-    batch_size = trial.suggest_categorical('batch_size', [4, 8, 16])
+    batch_size = trial.suggest_categorical('batch_size', [4, 8])
     optimizer = trial.suggest_categorical('optimizer', ['AdamW', 'SGD', 'Adam'])
+    dropout = trial.suggest_categorical('dropout', [0.2, 0.3, 0.4])
 
     # Load pretrained YOLO model
     model = YOLO(model_path).to(device=DEVICE)
@@ -40,6 +41,7 @@ def objective(trial, dataset_path='baseball_data.yaml', model_path='glove_tracki
                 imgsz=800,
                 optimizer=optimizer,
                 lr0=lr,
+                dropout=dropout,
                 plots=True,
                 val=True, 
                 device=DEVICE,
@@ -84,10 +86,11 @@ def fine_tune_model(model_path='glove_tracking_v4_YOLOv11.pt', dataset_path='bas
     # Train the model with the best hyperparameters or default parameters
     model.train(data=dataset_path,
                 epochs=fine_tune_epochs,
-                batch=best_params['batch_size'] if best_params else 8,  # Use best batch size or default
+                batch=best_params['batch_size'] if best_params else 4,  # Use best batch size or default
                 imgsz=800,
                 optimizer=best_params['optimizer'] if best_params else 'auto',
                 lr0=best_params['lr'] if best_params else 0.001,
+                warmup_epochs=0,
                 plots=True,
                 val=True,
                 device=DEVICE,
@@ -113,7 +116,7 @@ def fine_tune_model(model_path='glove_tracking_v4_YOLOv11.pt', dataset_path='bas
 
 if __name__ == "__main__":
     n_trials = 10
-    optimize_hyperpaterameters = True  # Set to True to optimize hyperparameters
+    optimize_hyperpaterameters = False  # Set to True to optimize hyperparameters
     model_path = 'glove_tracking_v4_YOLOv11.pt'  # Path to the pretrained model
     dataset_path = 'baseball_data.yaml'  # Path to the dataset YAML file
     fine_tune_epochs = 25
