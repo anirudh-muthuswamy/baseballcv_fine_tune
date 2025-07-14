@@ -30,7 +30,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Evaluate YOLO model metrics.")
     parser.add_argument('--model_path', type=str, default='glove_tracking_v4_YOLOv11.pt', help='Path to baseline model')
-    parser.add_argument('--fine_tuned_model_path', type=str, default='fine_tuned_glove_tracking_YOLOv11.pt', help='Path to fine-tuned model')
+    parser.add_argument('--fine_tuned_model_path', type=str, default='fine_tuned_model_results/weights/best.pt', help='Path to fine-tuned model')
     parser.add_argument('--dataset_path', type=str, default='baseball_data.yaml', help='Path to dataset YAML file')
     args = parser.parse_args()
 
