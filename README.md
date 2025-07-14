@@ -57,6 +57,8 @@ conda activate baseball_venv
 
 First, prepare the dataset for training. The `setup_data.py` script will generate the `baseball_data.yaml` file and filter the labels.
 
+There is a **class_weights** argument for the yaml file which can be used to set the class weights of each class, providing more priority for a particular class.
+
 ```bash
 python setup_data.py
 ```
@@ -65,7 +67,7 @@ This ensures the data is correctly formatted for the YOLO model.
 
 ### 2\. Fine-Tune the Model
 
-The `fine_tune.py` script handles both hyperparameter optimization and the actual fine-tuning process.
+The `fine_tune.py` script handles both hyperparameter optimization and the actual fine-tuning process. A freeze_layers parameters can be used to set the number of initial layers to be frozen during fine tuning, which helps in retaining weights for initial feature extraction
 
 #### Hyperparameter Optimization
 
@@ -100,6 +102,13 @@ This will output key metrics such as **mean average precision (mAP)**, **precisi
 
 To ensure the model is robust and generalizes well across various real-world conditions, a specific set of data augmentation techniques was applied during training. The parameters for these augmentations are defined in `fine_tune.py`.
 
+### Albumentation reinitialization
+
+YOLO takes in default albumentation parameters which can be edited.(Using a monkey patch https://medium.com/@k.sunman91/data-augmentation-on-ultralytics-for-training-yolov5-yolov8-97a8dab31fef)
+* Used RandomRain, RandomSunFlare, RandomShadow for different weather conditions.
+* Used MotionBlur, MedianBlur, MedianBlur for robustness during tracking across frames
+* Used CoarseDropout for areas of glove that could be obscured
+
 ### Geometric Transformations
 
 These augmentations simulate the dynamic camera work and player movements common in baseball broadcasts.
@@ -114,3 +123,19 @@ These augmentations simulate the dynamic camera work and player movements common
 ### Other Augmentations
 
 * **Mosaic (`mosaic`):** This method combines four training images into one, forcing the model to recognize objects in different contexts and at smaller scales. It is particularly effective for improving the detection of small objects, such as a glove.
+* **Multi_scale** Fine tune the YOLO model to different scales of image size due to small size of the glove.
+
+## Evaluation Results
+
+The models were evaluated on the test set of provided baseball_rubber_home_glove dataset, and the performance of the fine-tuned model was compared against the pre-trained model.
+
+| Model | mAP@.50 | mAP@.50-.95 | Precision | Recall |
+| :--- | :--- | :--- | :--- | :--- |
+| **Baseline** | 0.978 | 0.524 | 0.965 | 0.963 |
+| **Fine-Tuned** | 0.983 | 0.519 | 0.957 | 0.943 |
+
+### Summary
+
+The results show that the baseline model already performs at a very high level on this dataset. The fine-tuned model shows a slight improvement in **mAP@.50**, indicating it is slightly better at detecting objects when the overlap threshold is less strict.
+
+However, there is a minor decrease in the overall **mAP@.50-.95**, **precision**, and **recall**. This suggests that while the fine-tuning process has specialized the model for this specific dataset, it may have slightly overfit, leading to a marginal drop in performance on the most challenging examples. Overall, both models demonstrate strong performance, with the fine-tuning providing a very slight trade-off between higher confidence at lower overlap and a minor decrease in overall precision.
