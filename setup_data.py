@@ -18,13 +18,14 @@ import os
 from IPython.display import display
 import argparse
 
-def create_data_yaml(dataset_path):
+def create_data_yaml(dataset_path, class_weights=[2.5, 1.0, 1.0, 1.0]):
     dataset_path = os.path.abspath(dataset_path)
     data = {'train' :  f'{dataset_path}/train/images',
             'val' :  f'{dataset_path}/valid/images',
             'test' :  f'{dataset_path}/test/images',
             'nc': 4,
             'names': ['glove','homeplate','baseball','rubber'],
+            'class_weights': class_weights,
             }
 
     # overwrite the data to the .yaml file
@@ -49,7 +50,10 @@ def filter_labels(label_dir):
             lines = file.readlines()
 
         # Filter out annotations for class 4
-        filtered_lines = [line for line in lines if not line.startswith('4')]
+        filtered_lines = [line for line in lines if not (line.startswith('4') or
+                                                         line.startswith('3 ') or
+                                                         line.startswith('2') or
+                                                         line.startswith('1'))]
 
         # Rewrite the label file
         with open(label_path, 'w') as file:
@@ -60,11 +64,18 @@ if __name__ == "__main__":
     parser.add_argument(
         "--dataset_path",
         type=str,
-        default="baseball_rubber_home_glove",
+        default="baseball_rubber_home_glove_only",
         help="Path to the dataset directory"
+    )
+    parser.add_argument(
+        "--class_weights",
+        type=str,
+        default="2.5, 1.0, 1.0, 1.0",
+        help="Class weights for the dataset"
     )
     args = parser.parse_args()
     dataset_path = args.dataset_path
+    class_weights = [float(x) for x in args.class_weights.split(',')]
 
     create_data_yaml(dataset_path)
     
